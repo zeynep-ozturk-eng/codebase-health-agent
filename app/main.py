@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.parser import parse_source, FileFacts
 from app.scanner import scan_directory, ProjectSummary
+from app.security_agent import analyze_security, SecurityFinding
 
 app = FastAPI(
     title="Codebase Health Agent API",
@@ -45,5 +46,19 @@ def scan_project(payload: ScanDirectoryRequest):
     try:
         summary = scan_directory(payload.directory_path)
         return summary
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+class SecurityScanRequest(BaseModel):
+    code: str
+    language: str = "python"
+    file_path: str = "main.py"
+
+@app.post("/security-scan", response_model=list[SecurityFinding])
+def security_scan(payload: SecurityScanRequest):
+    try:
+        facts = parse_source(source=payload.code, language=payload.language, path=payload.file_path)
+        findings = analyze_security(payload.code, facts)
+        return findings
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
