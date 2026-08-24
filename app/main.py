@@ -1,3 +1,9 @@
+import os
+from dotenv import load_dotenv
+
+# .env dosyasındaki API key'in aktif olması için EN ÜSTTE çağrılmalı
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.parser import parse_source, FileFacts
@@ -17,7 +23,12 @@ class CodeAnalyzeRequest(BaseModel):
     file_path: str = "main.py"
 
 class ScanDirectoryRequest(BaseModel):
-    directory_path: str = "."  # 4 boşluk içeride olmalı
+    directory_path: str = "."
+
+class SecurityScanRequest(BaseModel):
+    code: str
+    language: str = "python"
+    file_path: str = "main.py"
 
 
 # Endpoint'ler
@@ -48,11 +59,6 @@ def scan_project(payload: ScanDirectoryRequest):
         return summary
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-class SecurityScanRequest(BaseModel):
-    code: str
-    language: str = "python"
-    file_path: str = "main.py"
 
 @app.post("/security-scan", response_model=list[SecurityFinding])
 def security_scan(payload: SecurityScanRequest):

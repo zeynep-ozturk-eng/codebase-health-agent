@@ -26,13 +26,13 @@ SADECE aşağıdaki JSON formatında cevap ver, başka hiçbir metin ekleme:
       "line": 42,
       "severity": "high",
       "is_real_issue": true,
-      "explanation": "Kullanıcı girdisi doğrudan eval() içine veriliyor, RCE riski var."
+      "explanation": "Kullanici girdisi doğrudan eval() içine veriliyor, RCE riski var."
     }
   ]
 }
 
 severity: "low" | "medium" | "high" | "critical"
-Eğer bir çağrı zararsızsa is_real_issue: false yap ve kısaca neden zararsız olduğunu açıkla.
+Eger bir cagri zararsizsa is_real_issue: false yap ve kisaca neden zararsiz oldugunu açikla.
 """
 
 
@@ -46,7 +46,7 @@ class SecurityFinding:
 
 
 def _build_context(source: str, facts: FileFacts, context_lines: int = 3) -> str:
-    """Her riskli çağrının etrafındaki birkaç satırı çıkarır (tüm dosyayı değil)."""
+    """Her riskli cagrinin etrafindaki birkaç satiri cikarir (tum dosyayi degil)."""
     lines = source.splitlines()
     blocks = []
 
@@ -70,12 +70,12 @@ def analyze_security(
     source: str,
     facts: FileFacts,
     *,
-    model: str = "gemini-2.0-flash",
+    model: str = "gemini-3.6-flash",
     client: genai.Client | None = None,
 ) -> list[SecurityFinding]:
-    """FileFacts içindeki riskli çağrıları LLM ile değerlendirir.
+    """FileFacts icindeki riskli cagirilari LLM ile degerlendirir.
 
-    Riskli çağrı yoksa hiç LLM çağrısı yapmadan boş liste döner (maliyet tasarrufu).
+    Riskli cagri yoksa hic LLM cagrisi yapmadan bos liste dondur (maliyet tasarrufu).
     """
     risky_calls = [c for c in facts.calls if c.risky]
     if not risky_calls:
