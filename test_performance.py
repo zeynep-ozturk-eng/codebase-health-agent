@@ -64,7 +64,7 @@ for fn in facts_2.functions:
 print(f"\nToplam cagri sayisi: {len(facts_2.calls)}")
 for c in facts_2.calls:
     print(f"  {c.name} (satir {c.span.start_line})")
-    
+
 findings_2 = analyze_performance(test_source_2, facts_2)
 print(f"Bulgu sayisi: {len(findings_2)}")
 for f in findings_2:
@@ -72,3 +72,5 @@ for f in findings_2:
    print(f"  Kategori: {f.category} | Onem: {f.severity} | Gercek mi: {f.is_real_issue}")
    print(f"  Aciklama: {f.explanation}")
    print(f"  Oneri: {f.suggestion}")
+
+    
